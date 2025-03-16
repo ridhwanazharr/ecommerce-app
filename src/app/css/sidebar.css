@@ -1,0 +1,11 @@
+.sidebar{
+    @apply min-h-screen bg-zinc-100 dark:bg-zinc-950 flex flex-col gap-2 w-64 p-4 font-medium drop-shadow-md;
+  }
+  
+  .sidebar .sidebar-title{
+    @apply text-zinc-500 select-none;
+  }
+  
+  .sidebar .sidebar-item{
+    @apply flex ms-2 text-black dark:text-white text-base gap-2 items-center;
+  }

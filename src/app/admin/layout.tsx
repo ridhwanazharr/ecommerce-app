@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import {Sidebar} from '@/components/layout/Sidebar';
+import {Navbar} from '@/components/layout/Navbar';
 import "@/globals.css";
 
 const geistSans = Geist({
@@ -28,12 +30,14 @@ export default function AdminLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div>
-            <div className="flex">Admin Layout</div>
+            <Navbar/>
             <div className="page-wrapper">
-                {children}
+                <Sidebar/>
+                <div className="content-wrapper">
+                  {children}
+                </div>
             </div>
         </div>
-        
       </body>
     </html>
   );
