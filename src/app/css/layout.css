@@ -1,9 +1,9 @@
 body {
-    @apply bg-orange-200 dark:bg-zinc-900 text-zinc-950 dark:text-white
+    @apply bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white
   }
   
 .page-wrapper{
-    @apply min-h-screen bg-orange-300 dark:bg-zinc-800 flex;
+    @apply min-h-screen bg-stone-50 dark:bg-zinc-900 flex;
   }
   
 .content-wrapper{

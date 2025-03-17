@@ -19,7 +19,7 @@ const SearchProduct = ({ onSearch }: SearchProductProps) => {
 
   return (
       <input
-        className="drop-shadow-md outline-1 outline-zinc-500 rounded-lg p-2 m-2"
+        className="drop-shadow-md outline-1 text-base outline-zinc-500 rounded-lg px-2 py-1"
         placeholder="Search products..."
         type="text"
         onChange={handleSearch}

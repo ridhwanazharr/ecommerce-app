@@ -1,9 +1,9 @@
 .product-card{
-    @apply transition-all duration-200 select-none flex flex-col rounded-lg outline-1 outline-white dark:outline-white/25 bg-zinc-50 dark:bg-zinc-900 overflow-clip shadow-md shadow-black/75 hover:scale-95 hover:cursor-pointer;
+    @apply transition-all duration-200 select-none flex flex-col rounded-lg outline-1 outline-white dark:outline-white/25 bg-zinc-50 dark:bg-zinc-950 overflow-clip shadow-md shadow-black/75 hover:scale-95 hover:cursor-pointer;
 }
 
 .product-card .product-img{
-    @apply bg-white flex-grow justify-center;
+    @apply bg-stone-200 flex-grow justify-center;
 }
 
 .product-img img{

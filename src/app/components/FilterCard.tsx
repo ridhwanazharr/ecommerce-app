@@ -1,59 +1,79 @@
 'use client'
 
-import { useRouter } from 'next/navigation';
 import { useState, useEffect } from "react";
+import SearchCategory from '@/components/SearchCategory';
+import PriceSlider from '@/components/PriceSlider';
+import MultiSlider from '@/components/MultiSlider';
 
-const FilterCard = () => {
-    const [categories, setCategories] = useState<any[]>([]);
-    const [loading, isLoading] = useState(true);
-    const router = useRouter();
+import { FaSliders } from "react-icons/fa6";
 
-    const Spinners = () => {
-        return (
-            <div className="flex items-center justify-center">
-                <div className="animate-spin h-5 w-5 border-4 border-orange-600 border-t-transparent rounded-full"></div>
-                <p className="ml-4 text-lg">Loading...</p>
-            </div>
-        )
-    };
+interface FilterCardProps {
+    onFilter: (filteredProducts: any[]) => void;
+    products : any[];
+};
 
-    useEffect(() => {
-        fetch('https://dummyjson.com/products')
-          .then((res) => res.json())
-          .then((data) => {
-            const mapCategories = [...new Set(data.products.map((product : any) => product.category))];
-            setCategories(mapCategories)
-            isLoading(false)
-          })
-      }, [])
+const FilterCard = ({onFilter,products} : FilterCardProps) => {
+    const maxSlide = Math.max(...products.map((product) => product.price));
+    const minSlide = Math.min(...products.map((product) => product.price));
+    const [sliderRange, setSliderRange] = useState<number[]>([minSlide, maxSlide]);
+    const [filteredProducts,setFilteredProducts] =  useState<any[]>(products); 
+    const [category,setCategory] = useState<string>('');
+    const [priceRange, setPriceRange] = useState<number[]>([minSlide, maxSlide]);
 
-    const redirectCategory = (category: string) => {
-        router.push(`/shop/category/${category}`);
-    };
+    const handleCategory = (query: string) => {
+        setCategory(query);
+    }
+
+    const handleSlide = (price: number[]) => {
+        setPriceRange(price);
+    }
+
+    useEffect(()=>{
+        let filtered = products;
+        filtered = filtered.filter((product) =>
+            product.category.toLowerCase().includes(category.toLowerCase())
+          );
+        const newMaxSlide = Math.max(...filtered.map((product) => product.price));
+        const newMinSlide = Math.min(...filtered.map((product) => product.price));
+        setSliderRange([newMinSlide,newMaxSlide]);
+    },[category,filteredProducts])
+
+    const handleFilter = () => {
+        let filtered = products;
+        if(category){
+            filtered = filtered.filter((product) =>
+                product.category.toLowerCase().includes(category.toLowerCase())
+              );
+        }
+
+        filtered = filtered.filter(
+            (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
+          );
+
+        setFilteredProducts(filtered);
+        onFilter(filteredProducts);
+    }
+    
+    const handleReset = () => {
+        onFilter(products);
+    }
+    
+
 
     return ( 
-        <div className="transition-all duration-150 m-4 pb-8 flex flex-col p-2 bg-white dark:bg-zinc-900 outline-1 outline-white drop-shadow-lg rounded-lg h-fit min-w-64">
-            <p className="opacity-75 pb-2 border-b-1 border-black/25 mb-2 font-semibold">Filter by categories :</p>
-            <div className="flex flex-col px-4">
-                {!loading ? 
-                    <>
-                        {categories.map((category : any, index) => (
-                            <a  
-                                className="px-2 py-1 outline-1 outline-zinc-300 dark:outline-zinc-700 drop-shadow-md my-1 flex dark:hover:bg-orange-400/50 hover:bg-orange-300/50 rounded-lg transition-all duration-150"
-                                key={index} 
-                                onClick={()=>redirectCategory(category)}>
-                                {category.charAt(0).toUpperCase() + category.slice(1)}
-                            </a>
-                        ))}
-                    </> 
-                    :
-                    <>
-                        <div className="flex-grow justify-center items-center py-4">
-                            <Spinners />
-                        </div> 
-                    </>
-                }
-                
+        <div className="flex flex-col bg-default m-4 p-4 rounded-lg min-w-72 outline-1 h-full drop-shadow-lg">
+            <div className="flex justify-between text-xl font-semibold text-zinc-900 dark:text-zinc-300 border-b-1 items-center border-zinc-900/25 dark:border-white/25 pb-4">Filters <FaSliders /></div>
+            <div className="flex flex-col border-b-1 border-zinc-900/25 dark:border-white/25 py-4 gap-1">
+                <p className="font-semibold text-zinc-900 dark:text-white text-lg">Categories</p>
+                <SearchCategory onSelect={handleCategory} products={products}/>
+            </div>
+            <div className="flex flex-col py-4">
+                <p className="font-semibold text-zinc-900 dark:text-white text-lg mb-2">Price</p>
+                <PriceSlider onSlide={handleSlide} range={sliderRange}/>
+            </div>
+            <div className="flex justify-center items-center mt-4">
+                <button className="px-4 py-2 bg-zinc-900 text-white dark:bg-white dark:text-black rounded-full text-lg" onClick={handleFilter}>Apply Filters</button>
+                <button className="px-4 py-2 bg-zinc-900 text-white dark:bg-white dark:text-black rounded-full text-lg" onClick={handleReset}>Reset</button>
             </div>
         </div>
      );
